@@ -7,33 +7,26 @@ import { Register } from './pages/Register';
 import { Products } from './pages/Products';
 import { Customers } from './pages/Customers';
 import { Orders } from './pages/Orders';
-import { useAuthStore } from './store/authStore';
-
-function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
-}
+import { PrivateRoute } from './components/PrivateRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rotas públicas */}
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
-        
-        <Route
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route path="/products" element={<Products />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/" element={<Navigate to="/products" replace />} />
+
+        {/* Rotas privadas */}
+        <Route element={<PrivateRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/products" element={<Products />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/" element={<Navigate to="/products" replace />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
