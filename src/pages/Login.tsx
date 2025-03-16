@@ -4,10 +4,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import axios from 'axios';
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email('Endereço de email inválido'),
+  senha: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'), 
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -15,7 +16,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 export function Login() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
-  
+
   const {
     register,
     handleSubmit,
@@ -24,10 +25,34 @@ export function Login() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginForm) => {
-    // Simulate login - Replace with actual API call
-    login({ id: '1', name: 'User', email: data.email });
-    navigate('/products');
+  const onSubmit = async (data: LoginForm) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/auth/login', 
+        data, 
+        { headers: { 'Content-Type': 'application/json' } }
+      );
+
+      console.log('Login response:', response.data);
+
+      if (response.data.access_token) {
+        localStorage.setItem('token', response.data.access_token);
+        login({
+          id: response.data.sub,
+          email: data.email,
+        });
+
+        navigate('/products');
+      }
+    } catch (error) {
+      console.error('Login falhou:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('Response data:', error.response.data);
+        alert(error.response.data.message || 'Email ou senha inválidos.');
+      } else {
+        alert('Erro ao fazer login. Tente novamente.');
+      }
+    }
   };
 
   return (
@@ -41,20 +66,16 @@ export function Login() {
             {...register('email')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label className="block text-sm font-medium text-gray-700">Senha</label>
           <input
             type="password"
-            {...register('password')}
+            {...register('senha')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
           />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-          )}
+          {errors.senha && <p className="text-red-500 text-sm mt-1">{errors.senha.message}</p>}
         </div>
         <button
           type="submit"
@@ -64,9 +85,9 @@ export function Login() {
         </button>
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">
-        Don't have an account?{' '}
+        Não tem uma conta?{' '}
         <Link to="/register" className="text-blue-500 hover:text-blue-600">
-          Register
+        Registre-se
         </Link>
       </p>
     </div>
