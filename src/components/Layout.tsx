@@ -19,7 +19,7 @@ export function Layout() {
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md">
         <div className="p-4">
-          <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Painel de Controle</h1>
         </div>
         <nav className="mt-8">
           <Link
@@ -29,7 +29,7 @@ export function Layout() {
             }`}
           >
             <LayoutDashboard className="w-5 h-5 mr-3" />
-            Products
+            Produtos
           </Link>
           <Link
             to="/customers"
@@ -38,7 +38,7 @@ export function Layout() {
             }`}
           >
             <Users className="w-5 h-5 mr-3" />
-            Customers
+            Clientes
           </Link>
           <Link
             to="/orders"
@@ -47,7 +47,7 @@ export function Layout() {
             }`}
           >
             <ShoppingCart className="w-5 h-5 mr-3" />
-            Orders
+            Pedidos
           </Link>
         </nav>
         <div className="absolute bottom-0 w-64 p-4 border-t">
