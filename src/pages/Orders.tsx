@@ -40,7 +40,7 @@ type Customer = {
 };
 
 export function Orders() {
-  const [orders, setOrders] = useState<OrderForm[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,26 +69,20 @@ export function Orders() {
   const fetchOrders = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/pedidos', {
+      const response = await axios.get<Order[]>('http://localhost:3000/pedidos', {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
-      const pedidosFormatados = response.data.map((order: Order) => ({
-        ...order,
-        cliente: order.cliente || { id: '', nome: 'Cliente Desconhecido' },
-        produtos: order.produtos || [],
-      }));
-  
-      setOrders(pedidosFormatados);
+
+      setOrders(response.data);
     } catch (error) {
       console.error('Erro ao buscar pedidos:', error);
     }
-  };  
+  };
 
   const fetchCustomers = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/clientes', {
+      const response = await axios.get<Customer[]>('http://localhost:3000/clientes', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCustomers(response.data);
@@ -100,7 +94,7 @@ export function Orders() {
   const fetchProducts = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/produtos', {
+      const response = await axios.get<Product[]>('http://localhost:3000/produtos', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
@@ -111,17 +105,17 @@ export function Orders() {
 
   const onSubmit = async (data: OrderForm) => {
     const token = localStorage.getItem('token');
-  
+
+    const payload = {
+      clienteId: parseInt(data.clienteId),
+      produtos: data.produtos.map((p) => ({
+        produtoId: parseInt(p.produtoId),
+        quantidade: p.quantidade,
+      })),
+      observacao: data.observacao,
+    };
+
     try {
-      const payload = {
-        clienteId: parseInt(data.clienteId), 
-        produtos: data.produtos.map((p) => ({
-          produtoId: parseInt(p.produtoId),
-          quantidade: p.quantidade,
-        })),
-        observacao: data.observacao,
-      };
-  
       if (editingOrder) {
         await axios.put(`http://localhost:3000/pedidos/${editingOrder.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
@@ -131,13 +125,13 @@ export function Orders() {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
-  
+
       fetchOrders();
       closeModal();
     } catch (error) {
       console.error('Erro ao salvar pedido:', error);
     }
-  };  
+  };
 
   const openModal = (order: Order | null = null) => {
     if (order) {
@@ -165,9 +159,9 @@ export function Orders() {
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Tem certeza que deseja excluir este pedido?')) return;
-  
+
     const token = localStorage.getItem('token');
-  
+
     try {
       await axios.delete(`http://localhost:3000/pedidos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -177,7 +171,7 @@ export function Orders() {
       console.error('Erro ao excluir pedido:', error);
       alert('Falha ao excluir pedido.');
     }
-  };  
+  };
 
   return (
     <div>
@@ -190,23 +184,23 @@ export function Orders() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {orders.map((order) => (
-        <div key={order.id} className="bg-white p-4 rounded-md shadow">
-          <h3 className="text-lg font-semibold">Pedido #{order.id}</h3>
-          <p><strong>Cliente:</strong> {order.cliente.nome}</p>
-          <p><strong>Total:</strong> R$ {order.total.toFixed(2)}</p>
-          <p><strong>Observação:</strong> {order.observacao || 'Nenhuma'}</p>
-        <div className="flex space-x-2 mt-2">
-          <button onClick={() => openModal(order)} className="text-blue-500 hover:text-blue-700">
-            <Pencil className="w-4 h-4" />
-          </button>
-          <button onClick={() => handleDelete(order.id)} className="text-red-500 hover:text-red-700">
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
+        {orders.map((order) => (
+          <div key={order.id} className="bg-white p-4 rounded-md shadow">
+            <h3 className="text-lg font-semibold">Pedido #{order.id}</h3>
+            <p><strong>Cliente:</strong> {order.cliente.nome}</p>
+            <p><strong>Total:</strong> R$ {order.total.toFixed(2)}</p>
+            <p><strong>Observação:</strong> {order.observacao || 'Nenhuma'}</p>
+            <div className="flex space-x-2 mt-2">
+              <button onClick={() => openModal(order)} className="text-blue-500 hover:text-blue-700">
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button onClick={() => handleDelete(order.id)} className="text-red-500 hover:text-red-700">
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} title={editingOrder ? 'Editar Pedido' : 'Adicionar Pedido'}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
