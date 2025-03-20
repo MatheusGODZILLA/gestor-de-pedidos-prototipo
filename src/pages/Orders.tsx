@@ -69,7 +69,7 @@ export function Orders() {
   const fetchOrders = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get<Order[]>('http://localhost:3000/pedidos', {
+      const response = await axios.get<Order[]>('https://gerador-de-pedidos-backend.onrender.com/pedidos', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -82,7 +82,7 @@ export function Orders() {
   const fetchCustomers = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get<Customer[]>('http://localhost:3000/clientes', {
+      const response = await axios.get<Customer[]>('https://gerador-de-pedidos-backend.onrender.com/clientes', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCustomers(response.data);
@@ -94,7 +94,7 @@ export function Orders() {
   const fetchProducts = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get<Product[]>('http://localhost:3000/produtos', {
+      const response = await axios.get<Product[]>('https://gerador-de-pedidos-backend.onrender.com/produtos', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
@@ -117,11 +117,11 @@ export function Orders() {
 
     try {
       if (editingOrder) {
-        await axios.put(`http://localhost:3000/pedidos/${editingOrder.id}`, payload, {
+        await axios.put(`https://gerador-de-pedidos-backend.onrender.com/pedidos/${editingOrder.id}`, payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post('http://localhost:3000/pedidos', payload, {
+        await axios.post('https://gerador-de-pedidos-backend.onrender.com/pedidos', payload, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -231,8 +231,8 @@ export function Orders() {
           <button type="button" onClick={() => append({ produtoId: '', quantidade: 1 })} className="text-blue-500">
             + Adicionar Produto
           </button>
-
-          <label>Observação</label>
+          
+          {/* <label>Observação</label> */}
           <input type="text" {...register('observacao')} className="block w-full border rounded-md p-2" placeholder="Observação (opcional)" />
 
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">

@@ -31,7 +31,7 @@ export function Register() {
   // Envio do formulário
   const onSubmit = async (data: RegisterForm) => {
     try {
-      const response = await axios.post('http://localhost:3000/users', {
+      const response = await axios.post('https://gerador-de-pedidos-backend.onrender.com/users', {
         email: data.email,
         senha: data.password,
       });
@@ -44,52 +44,55 @@ export function Register() {
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center mb-6">Registro</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            {...register('email')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-          />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-        </div>
+    <div>
+      <h1 className="text-2xl font-bold text-center mb-6">Gestor de Pedidos</h1>
+      <div className="bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Registro</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              {...register('email')}
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            />
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Senha</label>
-          <input
-            type="password"
-            {...register('password')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-          />
-          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Senha</label>
+            <input
+              type="password"
+              {...register('password')}
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
-          <input
-            type="password"
-            {...register('confirmPassword')}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-          />
-          {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
-        </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Confirmar Senha</label>
+            <input
+              type="password"
+              {...register('confirmPassword')}
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+            />
+            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Registrar
-        </button>
-      </form>
-      <p className="mt-4 text-center text-sm text-gray-600">
-        Já tem uma conta?{' '}
-        <Link to="/login" className="text-blue-500 hover:text-blue-600">
-          Login
-        </Link>
-      </p>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Registrar
+          </button>
+        </form>
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Já tem uma conta?{' '}
+          <Link to="/login" className="text-blue-500 hover:text-blue-600">
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

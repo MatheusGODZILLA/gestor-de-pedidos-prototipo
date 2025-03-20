@@ -44,7 +44,7 @@ export function Customers() {
   const fetchCustomers = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/clientes', {
+      const response = await axios.get('https://gerador-de-pedidos-backend.onrender.com/clientes', {
         headers: { Authorization: `Bearer ${token}` },
       });
   
@@ -74,12 +74,12 @@ export function Customers() {
     try {
       if (editingCustomer && editingCustomer.id) {
         // Atualizar cliente existente
-        await axios.put(`http://localhost:3000/clientes/${editingCustomer.id}`, data, {
+        await axios.put(`https://gerador-de-pedidos-backend.onrender.com/clientes/${editingCustomer.id}`, data, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
         // Criar um novo cliente
-        const response = await axios.post('http://localhost:3000/clientes', data, {
+        const response = await axios.post('https://gerador-de-pedidos-backend.onrender.com/clientes', data, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -138,7 +138,7 @@ export function Customers() {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.delete(`http://localhost:3000/clientes/${id}`, {
+      await axios.delete(`https://gerador-de-pedidos-backend.onrender.com/clientes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCustomers();
@@ -202,21 +202,95 @@ export function Customers() {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} title={editingCustomer ? 'Editar Cliente' : 'Adicionar Cliente'}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input type="text" {...register('nome')} placeholder="Nome" />
-          <input type="text" {...register('telefone')} placeholder="Telefone" />
-          <input type="text" {...register('empresa')} placeholder="Empresa" />
+  <div className="bg-white p-4 rounded-lg shadow-xl w-full max-w-lg transition-all duration-300">
+    <button 
+      onClick={closeModal}
+      className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition"
+    >
+      ✖
+    </button>
 
-          <h4 className="font-semibold">Endereço</h4>
-          <input type="text" {...register('endereco.rua')} placeholder="Rua" />
-          <input type="text" {...register('endereco.numero')} placeholder="Número" />
-          <input type="text" {...register('endereco.cidade')} placeholder="Cidade" />
-          <input type="text" {...register('endereco.estado')} placeholder="Estado" />
-          <input type="text" {...register('endereco.cep')} placeholder="CEP" />
+    <h2 className="text-2xl font-semibold text-gray-900 text-center mb-4">
+      {editingCustomer ? 'Editar Cliente' : 'Adicionar Cliente'}
+    </h2>
 
-          <button type="submit">{editingCustomer ? 'Atualizar' : 'Criar'}</button>
-        </form>
-      </Modal>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="text"
+          {...register('nome')}
+          placeholder="Nome"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+
+        <input
+          type="text"
+          {...register('telefone')}
+          placeholder="Telefone"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+
+      </div>
+        <input
+            type="text"
+            {...register('empresa')}
+            placeholder="Empresa (opcional)"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+      <div>
+
+      </div>
+
+      <h4 className="text-lg font-semibold mt-4">Endereço</h4>
+
+      <div className="grid grid-cols-3 gap-4">
+        <input
+          type="text"
+          {...register('endereco.rua')}
+          placeholder="Rua"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+        <input
+          type="text"
+          {...register('endereco.numero')}
+          placeholder="Número"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+
+        <input
+          type="text"
+          {...register('endereco.cidade')}
+          placeholder="Cidade"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <input
+          type="text"
+          {...register('endereco.estado')}
+          placeholder="Estado"
+          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+        />
+
+      <input
+        type="text"
+        {...register('endereco.cep')}
+        placeholder="CEP"
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+      />
+      </div>
+
+      <button
+        type="submit"
+        className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition"
+      >
+        {editingCustomer ? 'Atualizar Cliente' : 'Criar Cliente'}
+      </button>
+    </form>
+  </div>
+</Modal>
+
     </div>
   );
 }

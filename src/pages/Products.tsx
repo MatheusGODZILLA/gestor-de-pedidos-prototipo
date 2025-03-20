@@ -37,7 +37,7 @@ export function Products() {
   const fetchProducts = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/produtos', {
+      const response = await axios.get('https://gerador-de-pedidos-backend.onrender.com/produtos', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data);
@@ -53,7 +53,7 @@ export function Products() {
     try {
       if (editingProduct && editingProduct.id) {
         await axios.put(
-          `http://localhost:3000/produtos/${editingProduct.id}`,
+          `https://gerador-de-pedidos-backend.onrender.com/produtos/${editingProduct.id}`,
           {
             nome: data.nome,
             preco: data.preco,
@@ -64,7 +64,7 @@ export function Products() {
           }
         );
       } else {
-        const response = await axios.post('http://localhost:3000/produtos', data, {
+        const response = await axios.post('https://gerador-de-pedidos-backend.onrender.com/produtos', data, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -101,7 +101,7 @@ export function Products() {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.delete(`http://localhost:3000/produtos/${id}`, {
+      await axios.delete(`https://gerador-de-pedidos-backend.onrender.com/produtos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchProducts();
@@ -172,7 +172,7 @@ export function Products() {
             <input
               type="text"
               {...register('nome')}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
             />
             {errors.nome && <p className="text-red-500 text-sm mt-1">{errors.nome.message}</p>}
           </div>
@@ -182,7 +182,7 @@ export function Products() {
             <input
               type="text"
               {...register('tag')}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
             />
             {errors.tag && <p className="text-red-500 text-sm mt-1">{errors.tag.message}</p>}
           </div>
@@ -193,7 +193,7 @@ export function Products() {
               type="number"
               step="0.01"
               {...register('preco', { valueAsNumber: true })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+              className="mt-1 p-3 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
             />
             {errors.preco && <p className="text-red-500 text-sm mt-1">{errors.preco.message}</p>}
           </div>
